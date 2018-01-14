@@ -1,4 +1,5 @@
-﻿#define UseOptions // or NoOptions
+﻿
+#define UseOptions // or NoOptions
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,8 +78,11 @@ namespace EchoApp
         {
             var buffer = new byte[1024 * 4];
             WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            
             while (!result.CloseStatus.HasValue)
             {
+                Console.WriteLine("Received: " + System.Text.Encoding.UTF8.GetString(buffer).Trim());
+
                 await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
 
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
